@@ -35,29 +35,34 @@ export INTX_CREDENTIALS='{
 
 You may also pass an environment variable called `intxCliTimeout` which will override the default request timeout of 7 seconds. This value should be an integer in seconds.
 
-Build the application binary and specify an output name, e.g. `intxctl`:
+To build the application binary, simply run:
 
 ```
-go build -o intxctl
+make
 ```
+
+This command compiles the application and creates a binary named `intxctl` in the current directory.
 
 To ensure your project's dependencies are up-to-date, run:
 ```
 go mod tidy
 ```
 
-To make your application easily accessible from any location, move the binary you created to a directory that's already in your system's PATH. For example, these are the commands to move `intxctl` to `/usr/local/bin`, as well as set permissions to reduce risk:
+To install `intxctl` to `/usr/local/bin` for easy access from any location, run:
 
 ```
-sudo mv intxctl /usr/local/bin/
-chmod 755 /usr/local/bin/intxctl
+make install
 ```
 
-To verify that your application is installed correctly and accessible from any location, run the following command. It will include all available requests:
+This command moves the `intxctl` binary to `/usr/local/bin/` and sets the appropriate permissions. You might need `sudo` access to move the file to `/usr/local/bin/`.
+
+To verify that `intxctl` is correctly installed and accessible from any location, you can run:
 
 ```
 intxctl
 ```
+
+This command should display all available requests if the installation was successful.
 
 Finally, to run commands for each endpoint, use the following format to test each endpoint. Please note that many endpoints require flags, which are detailed with the `--help` flag.
 

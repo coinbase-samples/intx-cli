@@ -27,9 +27,9 @@ var listPortfoliosCmd = &cobra.Command{
 	Use:   "list-portfolios",
 	Short: "List portfolios associated with API key",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client, err := utils.GetClientFromEnv()
+		client, _, err := utils.InitClientAndPortfolioId(cmd, false)
 		if err != nil {
-			return fmt.Errorf("cannot get client from environment: %w", err)
+			return fmt.Errorf("cannot initialize from environment: %w", err)
 		}
 
 		ctx, cancel := utils.GetContextWithTimeout()
@@ -42,14 +42,7 @@ var listPortfoliosCmd = &cobra.Command{
 			return fmt.Errorf("cannot list portfolios: %w", err)
 		}
 
-		jsonResponse, err := utils.FormatResponseAsJson(cmd, response)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(jsonResponse)
-
-		return nil
+		return utils.PrintJsonResponse(cmd, response)
 	},
 }
 

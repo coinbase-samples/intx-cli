@@ -27,14 +27,9 @@ var listFillsCmd = &cobra.Command{
 	Use:   "list-fills",
 	Short: "List fills by portfolios.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client, err := utils.GetClientFromEnv()
+		client, portfolioIds, err := utils.InitClientAndPortfolioId(cmd, true)
 		if err != nil {
-			return fmt.Errorf("cannot get client from environment: %w", err)
-		}
-
-		portfolioIds, err := utils.GetPortfolioId(cmd, client)
-		if err != nil {
-			return fmt.Errorf("failed to get portfolio ID: %w", err)
+			return fmt.Errorf("cannot initialize from environment: %w", err)
 		}
 
 		resultLimit, _ := utils.GetFlagIntValue(cmd, utils.ResultLimitFlag)
@@ -61,14 +56,7 @@ var listFillsCmd = &cobra.Command{
 			return fmt.Errorf("cannot list fills: %w", err)
 		}
 
-		jsonResponse, err := utils.FormatResponseAsJson(cmd, response)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(jsonResponse)
-
-		return nil
+		return utils.PrintJsonResponse(cmd, response)
 	},
 }
 

@@ -27,14 +27,9 @@ var createWithdrawalToCryptoAddressCmd = &cobra.Command{
 	Use:   "create-withdrawal-to-crypto-address",
 	Short: "Create a withdrawal to crypto address.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client, err := utils.GetClientFromEnv()
+		client, portfolioId, err := utils.InitClientAndPortfolioId(cmd, true)
 		if err != nil {
-			return fmt.Errorf("failed to initialize client: %w", err)
-		}
-
-		portfolioId, err := utils.GetPortfolioId(cmd, client)
-		if err != nil {
-			return err
+			return fmt.Errorf("cannot initialize from environment: %w", err)
 		}
 
 		ctx, cancel := utils.GetContextWithTimeout()
@@ -61,14 +56,7 @@ var createWithdrawalToCryptoAddressCmd = &cobra.Command{
 			return fmt.Errorf("cannot create withdrawal: %w", err)
 		}
 
-		jsonResponse, err := utils.FormatResponseAsJson(cmd, response)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(jsonResponse)
-
-		return nil
+		return utils.PrintJsonResponse(cmd, response)
 	},
 }
 

@@ -28,19 +28,14 @@ var cancelOrderCmd = &cobra.Command{
 	Use:   "cancel-order",
 	Short: "Attempt to cancel an open order.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client, err := utils.GetClientFromEnv()
+		client, portfolioId, err := utils.InitClientAndPortfolioId(cmd, true)
 		if err != nil {
-			return fmt.Errorf("cannot get client from environment: %w", err)
+			return fmt.Errorf("cannot initialize from environment: %w", err)
 		}
 
 		orderId, err := cmd.Flags().GetString(utils.OrderIdFlag)
 		if err != nil {
 			return fmt.Errorf("cannot get order ID: %w", err)
-		}
-
-		portfolioId, err := utils.GetPortfolioId(cmd, client)
-		if err != nil {
-			return err
 		}
 
 		ctx, cancel := utils.GetContextWithTimeout()
@@ -56,13 +51,7 @@ var cancelOrderCmd = &cobra.Command{
 			return fmt.Errorf("cannot cancel order: %w", err)
 		}
 
-		jsonResponse, err := utils.FormatResponseAsJson(cmd, response)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(jsonResponse)
-		return nil
+		return utils.PrintJsonResponse(cmd, response)
 	},
 }
 

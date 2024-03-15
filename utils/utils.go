@@ -54,6 +54,23 @@ func GetClientFromEnv() (*intx.Client, error) {
 	return client, nil
 }
 
+func InitClientAndPortfolioId(cmd *cobra.Command, needPortfolioId bool) (client *intx.Client, portfolioId string, err error) {
+	client, err = GetClientFromEnv()
+	if err != nil {
+		err = fmt.Errorf("cannot get client from environment: %w", err)
+		return
+	}
+
+	if needPortfolioId {
+		portfolioId, err = GetPortfolioId(cmd, client)
+		if err != nil {
+			return
+		}
+	}
+
+	return
+}
+
 func GetFlagStringValue(cmd *cobra.Command, flagName string) string {
 	value, _ := cmd.Flags().GetString(flagName)
 	return value
@@ -99,6 +116,16 @@ func GetPortfolioId(cmd *cobra.Command, client *intx.Client) (string, error) {
 	}
 
 	return portfolioId, nil
+}
+
+func PrintJsonResponse(cmd *cobra.Command, response interface{}) error {
+	jsonResponse, err := FormatResponseAsJson(cmd, response)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(jsonResponse)
+	return nil
 }
 
 func FormatResponseAsJson(cmd *cobra.Command, response interface{}) (string, error) {

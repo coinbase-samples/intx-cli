@@ -27,9 +27,9 @@ var getInstrumentDetailsCmd = &cobra.Command{
 	Use:   "get-instrument-details",
 	Short: "Get details for instrument.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client, err := utils.GetClientFromEnv()
+		client, _, err := utils.InitClientAndPortfolioId(cmd, false)
 		if err != nil {
-			return fmt.Errorf("failed to initialize client: %w", err)
+			return fmt.Errorf("cannot initialize from environment: %w", err)
 		}
 
 		ctx, cancel := utils.GetContextWithTimeout()
@@ -44,14 +44,7 @@ var getInstrumentDetailsCmd = &cobra.Command{
 			return fmt.Errorf("cannot get instrument: %w", err)
 		}
 
-		jsonResponse, err := utils.FormatResponseAsJson(cmd, response)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(jsonResponse)
-
-		return nil
+		return utils.PrintJsonResponse(cmd, response)
 	},
 }
 

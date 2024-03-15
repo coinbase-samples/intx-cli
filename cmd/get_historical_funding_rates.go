@@ -27,9 +27,9 @@ var getHistoricalFundingRatesCmd = &cobra.Command{
 	Use:   "get-historical-funding-rates",
 	Short: "Get historical funding rates for instrument.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client, err := utils.GetClientFromEnv()
+		client, _, err := utils.InitClientAndPortfolioId(cmd, false)
 		if err != nil {
-			return fmt.Errorf("failed to initialize client: %w", err)
+			return fmt.Errorf("cannot initialize from environment: %w", err)
 		}
 
 		ctx, cancel := utils.GetContextWithTimeout()
@@ -44,14 +44,7 @@ var getHistoricalFundingRatesCmd = &cobra.Command{
 			return fmt.Errorf("cannot get funding rates: %w", err)
 		}
 
-		jsonResponse, err := utils.FormatResponseAsJson(cmd, response)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(jsonResponse)
-
-		return nil
+		return utils.PrintJsonResponse(cmd, response)
 	},
 }
 

@@ -28,19 +28,14 @@ var createOrderCmd = &cobra.Command{
 	Use:   "create-order",
 	Short: "Create an order.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client, err := utils.GetClientFromEnv()
+		client, portfolioId, err := utils.InitClientAndPortfolioId(cmd, true)
 		if err != nil {
-			return fmt.Errorf("failed to initialize client: %w", err)
+			return fmt.Errorf("cannot initialize from environment: %w", err)
 		}
 
 		clientOrderId := utils.GetFlagStringValue(cmd, utils.ClientOrderIdFlag)
 		if clientOrderId == "" {
 			clientOrderId = uuid.New().String()
-		}
-
-		portfolioId, err := utils.GetPortfolioId(cmd, client)
-		if err != nil {
-			return err
 		}
 
 		ctx, cancel := utils.GetContextWithTimeout()
@@ -67,14 +62,7 @@ var createOrderCmd = &cobra.Command{
 			return fmt.Errorf("cannot create order: %w", err)
 		}
 
-		jsonResponse, err := utils.FormatResponseAsJson(cmd, response)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(jsonResponse)
-
-		return nil
+		return utils.PrintJsonResponse(cmd, response)
 	},
 }
 
