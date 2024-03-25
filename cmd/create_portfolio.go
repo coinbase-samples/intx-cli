@@ -49,10 +49,27 @@ var createPortfolioCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createPortfolioCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: createPortfolioCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.NameFlag,
+					Shorthand:    "n",
+					Usage:        "Name of the portfolio (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	createPortfolioCmd.Flags().StringP(utils.NameFlag, "n", "", "Name of the portfolio (Required)")
-	createPortfolioCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	createPortfolioCmd.MarkFlagRequired(utils.NameFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

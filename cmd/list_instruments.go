@@ -47,7 +47,20 @@ var listInstrumentsCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(listInstrumentsCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: listInstrumentsCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	listInstrumentsCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

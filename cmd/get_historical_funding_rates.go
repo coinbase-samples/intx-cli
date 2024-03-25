@@ -49,10 +49,27 @@ var getHistoricalFundingRatesCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getHistoricalFundingRatesCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getHistoricalFundingRatesCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.InstrumentIdFlag,
+					Shorthand:    "i",
+					Usage:        "Instrument ID (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getHistoricalFundingRatesCmd.Flags().StringP(utils.InstrumentIdFlag, "i", "", "Instrument ID (Required)")
-	getHistoricalFundingRatesCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	getHistoricalFundingRatesCmd.MarkFlagRequired(utils.InstrumentIdFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

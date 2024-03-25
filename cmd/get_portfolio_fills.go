@@ -60,16 +60,66 @@ var getPortfolioFillsCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getPortfolioFillsCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getPortfolioFillsCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "p",
+					Usage:        "Portfolio ID (required). Uses environment variable if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.OrderIdFlag,
+					Shorthand:    "i",
+					Usage:        "Order ID",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ClientOrderIdFlag,
+					Shorthand:    "c",
+					Usage:        "Client Order ID",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.RefDatetimeFlag,
+					Shorthand:    "r",
+					Usage:        "Reference datetime for the request",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ResultLimitFlag,
+					DefaultValue: utils.ZeroInt,
+					Usage:        "Result limit",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ResultOffsetFlag,
+					DefaultValue: utils.ZeroInt,
+					Usage:        "Result offset",
+					Required:     false,
+				},
+				{
+					FlagName:  utils.TimeFromFlag,
+					Shorthand: "t",
+					Usage:     "Time from which to get fills",
+					Required:  false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getPortfolioFillsCmd.Flags().StringP(utils.PortfolioIdFlag, "p", "", "Portfolio ID (required). Uses environment variable if blank")
-	getPortfolioFillsCmd.Flags().String(utils.OrderIdFlag, "i", "Order ID")
-	getPortfolioFillsCmd.Flags().String(utils.ClientOrderIdFlag, "c", "Client Order ID")
-	getPortfolioFillsCmd.Flags().String(utils.RefDatetimeFlag, "r", "Reference datetime for the request")
-	getPortfolioFillsCmd.Flags().Int(utils.ResultLimitFlag, utils.ZeroInt, "Result limit")
-	getPortfolioFillsCmd.Flags().Int(utils.ResultOffsetFlag, utils.ZeroInt, "Result offset")
-	getPortfolioFillsCmd.Flags().String(utils.TimeFromFlag, "t", "Time from which to get fills")
-	getPortfolioFillsCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	getPortfolioFillsCmd.MarkFlagRequired("portfolio-id")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

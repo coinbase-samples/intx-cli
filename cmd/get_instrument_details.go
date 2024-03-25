@@ -49,10 +49,27 @@ var getInstrumentDetailsCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getInstrumentDetailsCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getInstrumentDetailsCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.InstrumentIdFlag,
+					Shorthand:    "i",
+					Usage:        "Instrument ID (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getInstrumentDetailsCmd.Flags().StringP(utils.InstrumentIdFlag, "i", "", "Instrument ID (Required)")
-	getInstrumentDetailsCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	getInstrumentDetailsCmd.MarkFlagRequired(utils.InstrumentIdFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

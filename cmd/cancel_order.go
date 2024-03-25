@@ -56,11 +56,34 @@ var cancelOrderCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(cancelOrderCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: cancelOrderCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.OrderIdFlag,
+					Shorthand:    "i",
+					Usage:        "ID of the order to cancel (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "p",
+					Usage:        "Portfolio ID. Uses environment variable if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	cancelOrderCmd.Flags().StringP(utils.OrderIdFlag, "i", "", "ID of the order to cancel (Required)")
-	cancelOrderCmd.Flags().StringP(utils.PortfolioIdFlag, "p", "", "Portfolio ID. Uses environment variable if blank")
-	cancelOrderCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	cancelOrderCmd.MarkFlagRequired(utils.OrderIdFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

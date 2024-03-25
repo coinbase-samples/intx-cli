@@ -49,10 +49,27 @@ var validateCounterPartyIdCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(validateCounterPartyIdCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: validateCounterPartyIdCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.CounterpartyIdFlag,
+					Shorthand:    "i",
+					Usage:        "Counterparty ID to be validated (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	validateCounterPartyIdCmd.Flags().StringP(utils.CounterpartyIdFlag, "i", "", "Counterparty ID ot be validated (Required)")
-	validateCounterPartyIdCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	validateCounterPartyIdCmd.MarkFlagRequired(utils.CounterpartyIdFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

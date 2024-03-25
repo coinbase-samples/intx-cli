@@ -60,15 +60,72 @@ var listOpenOrdersCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(listOpenOrdersCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: listOpenOrdersCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "p",
+					Usage:        "Portfolio ID(s). Uses environment variable if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.InstrumentIdFlag,
+					Shorthand:    "i",
+					Usage:        "Filter open orders by instrument ID",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ClientOrderIdFlag,
+					Shorthand:    "c",
+					Usage:        "Filter open orders by client order ID",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.EventTypeFlag,
+					Shorthand:    "e",
+					Usage:        "Filter open orders by event type",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.RefDatetimeFlag,
+					Usage:        "Filter open orders by datetime",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ResultLimitFlag,
+					DefaultValue: 0,
+					Usage:        "Limit the number of open orders returned",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ResultOffsetFlag,
+					DefaultValue: 0,
+					Usage:        "Offset for the list of open orders returned",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.TimeFromFlag,
+					Usage:        "Filter open orders from this time",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	listOpenOrdersCmd.Flags().StringP(utils.PortfolioIdFlag, "p", "", "Portfolio ID(s). Uses environment variable if blank")
-	listOpenOrdersCmd.Flags().StringP(utils.InstrumentIdFlag, "i", "", "Filter open orders by instrument ID")
-	listOpenOrdersCmd.Flags().StringP(utils.ClientOrderIdFlag, "c", "", "Filter open orders by client order ID")
-	listOpenOrdersCmd.Flags().StringP(utils.EventTypeFlag, "e", "", "Filter open orders by event type")
-	listOpenOrdersCmd.Flags().StringP(utils.RefDatetimeFlag, "", "", "Filter open orders by datetime")
-	listOpenOrdersCmd.Flags().Int(utils.ResultLimitFlag, 0, "Limit the number of open orders returned")
-	listOpenOrdersCmd.Flags().Int(utils.ResultOffsetFlag, 0, "Offset for the list of open orders returned")
-	listOpenOrdersCmd.Flags().StringP(utils.TimeFromFlag, "", "", "Filter open orders from this time")
-	listOpenOrdersCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

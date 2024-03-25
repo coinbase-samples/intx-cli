@@ -52,14 +52,41 @@ var createPortfolioTransferCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createPortfolioTransferCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: createPortfolioTransferCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.ToFlag,
+					Shorthand:    "t",
+					Usage:        "Name of destination portfolio (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.AssetIdFlag,
+					Shorthand:    "i",
+					Usage:        "ID of asset to be transferred (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.AmountFlag,
+					Shorthand:    "a",
+					Usage:        "Amount of asset to be transferred (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	createPortfolioTransferCmd.Flags().StringP(utils.ToFlag, "t", "", "Name of destination portfolio (Required)")
-	createPortfolioTransferCmd.Flags().StringP(utils.AssetIdFlag, "i", "", "ID of asset to be transferred (Required)")
-	createPortfolioTransferCmd.Flags().StringP(utils.AmountFlag, "a", "", "Amount of asset to be transferred (Required)")
-	createPortfolioTransferCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	createPortfolioTransferCmd.MarkFlagRequired(utils.ToFlag)
-	createPortfolioTransferCmd.MarkFlagRequired(utils.AssetIdFlag)
-	createPortfolioTransferCmd.MarkFlagRequired(utils.AmountFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

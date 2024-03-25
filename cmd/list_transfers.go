@@ -71,14 +71,67 @@ var listTransfersCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(listTransfersCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: listTransfersCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "p",
+					Usage:        "Portfolio ID(s). Uses environment variable if blank, supports comma-separated values for multiple IDs",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.TimeFromFlag,
+					Shorthand:    "f",
+					Usage:        "Filter transfers from this time",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.TimeToFlag,
+					Shorthand:    "t",
+					Usage:        "Filter transfers to this time",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.StatusFlag,
+					Shorthand:    "s",
+					Usage:        "Filter transfers by status",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.TypeFlag,
+					Shorthand:    "y",
+					Usage:        "Filter transfers by type",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ResultLimitFlag,
+					DefaultValue: 0,
+					Usage:        "Limit the number of transfers returned",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ResultOffsetFlag,
+					DefaultValue: 0,
+					Usage:        "Offset for the list of transfers returned",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	listTransfersCmd.Flags().StringP(utils.PortfolioIdFlag, "p", "", "Portfolio ID(s). Uses environment variable if blank, supports comma-separated values for multiple IDs")
-	listTransfersCmd.Flags().StringP(utils.TimeFromFlag, "f", "", "Filter transfers from this time")
-	listTransfersCmd.Flags().StringP(utils.TimeToFlag, "t", "", "Filter transfers to this time")
-	listTransfersCmd.Flags().StringP(utils.StatusFlag, "s", "", "Filter transfers by status")
-	listTransfersCmd.Flags().StringP(utils.TypeFlag, "y", "", "Filter transfers by type")
-	listTransfersCmd.Flags().Int(utils.ResultLimitFlag, 0, "Limit the number of transfers returned")
-	listTransfersCmd.Flags().Int(utils.ResultOffsetFlag, 0, "Offset for the list of transfers returned")
-	listTransfersCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

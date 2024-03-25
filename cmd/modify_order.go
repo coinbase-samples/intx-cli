@@ -54,15 +54,62 @@ var modifyOrderCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(modifyOrderCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: modifyOrderCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.OrderIdFlag,
+					Shorthand:    "i",
+					Usage:        "Order ID (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.SizeFlag,
+					Shorthand:    "s",
+					Usage:        "Order size in base asset units",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.LimitPriceFlag,
+					Shorthand:    "l",
+					Usage:        "Limit price for the order",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.StopPriceFlag,
+					Shorthand:    "p",
+					Usage:        "Stop price for the order",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "o",
+					Usage:        "Portfolio ID. Uses environment variable if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ClientOrderIdFlag,
+					Shorthand:    "c",
+					Usage:        "Client order id value",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	modifyOrderCmd.Flags().StringP(utils.OrderIdFlag, "i", "", "Order ID (Required)")
-	modifyOrderCmd.Flags().StringP(utils.SizeFlag, "s", "", "Order size in base asset units")
-	modifyOrderCmd.Flags().StringP(utils.LimitPriceFlag, "l", "", "Limit price for the order")
-	modifyOrderCmd.Flags().StringP(utils.StopPriceFlag, "p", "", "Stop price for the order")
-	modifyOrderCmd.Flags().StringP(utils.PortfolioIdFlag, "o", "", "Portfolio ID. Uses environment variable if blank")
-	modifyOrderCmd.Flags().StringP(utils.ClientOrderIdFlag, "c", "", "Client order id value")
-	modifyOrderCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	modifyOrderCmd.MarkFlagRequired(utils.OrderIdFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

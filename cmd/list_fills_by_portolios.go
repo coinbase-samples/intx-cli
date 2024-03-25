@@ -61,14 +61,65 @@ var listFillsCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(listFillsCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: listFillsCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "i",
+					Usage:        "Portfolio ID(s). Uses environment variable if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.OrderIdFlag,
+					Shorthand:    "o",
+					Usage:        "Filter fills by order ID",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ClientOrderIdFlag,
+					Shorthand:    "c",
+					Usage:        "Filter fills by client order ID",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.RefDatetimeFlag,
+					Usage:        "Filter fills by reference datetime",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ResultLimitFlag,
+					DefaultValue: 0,
+					Usage:        "Limit the number of fills returned",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ResultOffsetFlag,
+					DefaultValue: 0,
+					Usage:        "Offset for the list of fills returned",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.TimeFromFlag,
+					Usage:        "Filter fills from this time",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	listFillsCmd.Flags().StringP(utils.PortfolioIdFlag, "i", "", "Portfolio ID(s). Uses environment variable if blank")
-	listFillsCmd.Flags().StringP(utils.OrderIdFlag, "o", "", "Filter fills by order ID")
-	listFillsCmd.Flags().StringP(utils.ClientOrderIdFlag, "c", "", "Filter fills by client order ID")
-	listFillsCmd.Flags().StringP(utils.RefDatetimeFlag, "", "", "Filter fills by reference datetime")
-	listFillsCmd.Flags().Int(utils.ResultLimitFlag, 0, "Limit the number of fills returned")
-	listFillsCmd.Flags().Int(utils.ResultOffsetFlag, 0, "Offset for the list of fills returned")
-	listFillsCmd.Flags().StringP(utils.TimeFromFlag, "", "", "Filter fills from this time")
-	listFillsCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

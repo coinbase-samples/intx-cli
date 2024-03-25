@@ -49,10 +49,27 @@ var getAssetCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getAssetCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getAssetCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.AssetIdFlag,
+					Shorthand:    "i",
+					Usage:        "Asset ID (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getAssetCmd.Flags().StringP(utils.AssetIdFlag, "i", "", "Asset ID (Required)")
-	getAssetCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	getAssetCmd.MarkFlagRequired(utils.AssetIdFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

@@ -49,9 +49,27 @@ var createCounterPartyIdCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createCounterPartyIdCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: createCounterPartyIdCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "i",
+					Usage:        "Portfolio ID. Uses environment variable if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	createCounterPartyIdCmd.Flags().StringP(utils.PortfolioIdFlag, "i", "", "Portfolio ID. Uses environment variable if blank")
-	createCounterPartyIdCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

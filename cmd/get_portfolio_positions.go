@@ -49,8 +49,27 @@ var getPortfolioPositionsCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getPortfolioPositionsCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getPortfolioPositionsCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "i",
+					Usage:        "Portfolio ID. Uses environment variable if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getPortfolioPositionsCmd.Flags().StringP(utils.PortfolioIdFlag, "i", "", "Portfolio ID. Uses environment variable if blank")
-	getPortfolioPositionsCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

@@ -49,8 +49,27 @@ var getSupportedNetworksCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getSupportedNetworksCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getSupportedNetworksCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.AssetIdFlag,
+					Shorthand:    "i",
+					Usage:        "ID of the Asset (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getSupportedNetworksCmd.Flags().StringP(utils.AssetIdFlag, "i", "", "ID of the Asset (Required)")
-	getSupportedNetworksCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

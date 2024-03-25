@@ -61,13 +61,41 @@ var createCryptoAddressCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createCryptoAddressCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: createCryptoAddressCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.AssetIdFlag,
+					Shorthand:    "a",
+					Usage:        "ID of the asset (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.NetworkArnIdFlag,
+					Shorthand:    "n",
+					Usage:        "Network Arn ID of the asset (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "i",
+					Usage:        "Portfolio ID. Uses environment variable if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	createCryptoAddressCmd.Flags().StringP(utils.AssetIdFlag, "a", "", "ID of the asset (Required)")
-	createCryptoAddressCmd.Flags().StringP(utils.NetworkArnIdFlag, "n", "", "Network Arn ID of the asset (Required)")
-	createCryptoAddressCmd.Flags().StringP(utils.PortfolioIdFlag, "i", "", "Portfolio ID. Uses environment variable if blank")
-	createCryptoAddressCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	createCryptoAddressCmd.MarkFlagRequired(utils.AssetIdFlag)
-	createCryptoAddressCmd.MarkFlagRequired(utils.NetworkArnIdFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

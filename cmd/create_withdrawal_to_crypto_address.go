@@ -61,17 +61,48 @@ var createWithdrawalToCryptoAddressCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createWithdrawalToCryptoAddressCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: createWithdrawalToCryptoAddressCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.AssetIdFlag,
+					Shorthand:    "i",
+					Usage:        "ID of asset to be withdrawn (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.AmountFlag,
+					Shorthand:    "a",
+					Usage:        "Amount of asset to be withdrawn (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.NetworkArnIdFlag,
+					Shorthand:    "n",
+					Usage:        "Network Arn Id for withdrawal (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.AddressFlag,
+					Shorthand:    "d",
+					Usage:        "Address for withdrawal (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	createWithdrawalToCryptoAddressCmd.Flags().StringP(utils.AssetIdFlag, "i", "", "ID of asset to be withdrawn (Required)")
-	createWithdrawalToCryptoAddressCmd.Flags().StringP(utils.AmountFlag, "a", "", "Amount of asset to be withdrawn (Required)")
-	createWithdrawalToCryptoAddressCmd.Flags().StringP(utils.NetworkArnIdFlag, "n", "", "Network Arn Id for withdrawal (Required)")
-	createWithdrawalToCryptoAddressCmd.Flags().StringP(utils.AddressFlag, "d", "", "Address for withdrawal (Required)")
-	createWithdrawalToCryptoAddressCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	createWithdrawalToCryptoAddressCmd.MarkFlagRequired(utils.AssetIdFlag)
-	createWithdrawalToCryptoAddressCmd.MarkFlagRequired(utils.AmountFlag)
-	createWithdrawalToCryptoAddressCmd.MarkFlagRequired(utils.NetworkArnIdFlag)
-	createWithdrawalToCryptoAddressCmd.MarkFlagRequired(utils.AddressFlag)
-
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

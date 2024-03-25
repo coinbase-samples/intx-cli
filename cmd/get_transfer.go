@@ -49,8 +49,27 @@ var getTransferCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getTransferCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getTransferCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.TransferIdFlag,
+					Shorthand:    "i",
+					Usage:        "ID of the Transfer (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getTransferCmd.Flags().StringP(utils.TransferIdFlag, "i", "", "ID of the Transfer (Required)")
-	getTransferCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

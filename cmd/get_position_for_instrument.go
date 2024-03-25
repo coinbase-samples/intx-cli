@@ -50,9 +50,34 @@ var getPositionForInstrumentCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getPositionForInstrumentCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getPositionForInstrumentCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "p",
+					Usage:        "Portfolio ID. Uses environment variable if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.InstrumentIdFlag,
+					Shorthand:    "i",
+					Usage:        "ID of the Instrument, e.g. ETH-USDC (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getPositionForInstrumentCmd.Flags().StringP(utils.PortfolioIdFlag, "p", "", "Portfolio ID. Uses environment variable if blank")
-	getPositionForInstrumentCmd.Flags().StringP(utils.InstrumentIdFlag, "i", "", "ID of the Instrument, e.g. ETH-USDC (Required)")
-	getPositionForInstrumentCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

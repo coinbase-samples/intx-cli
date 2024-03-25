@@ -50,10 +50,27 @@ var getBalanceForAssetCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getBalanceForAssetCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getBalanceForAssetCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.AssetIdFlag,
+					Shorthand:    "i",
+					Usage:        "Asset ID (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getBalanceForAssetCmd.Flags().StringP(utils.AssetIdFlag, "i", "", "Asset ID (Required)")
-	getBalanceForAssetCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	getBalanceForAssetCmd.MarkFlagRequired(utils.AssetIdFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

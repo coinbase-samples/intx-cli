@@ -53,15 +53,48 @@ var createWithdrawalToCounterPartyIdCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createWithdrawalToCounterPartyIdCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: createWithdrawalToCounterPartyIdCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.CounterpartyIdFlag,
+					Shorthand:    "c",
+					Usage:        "ID of counterparty (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.AssetIdFlag,
+					Shorthand:    "i",
+					Usage:        "ID of asset to be withdrawn (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.AmountFlag,
+					Shorthand:    "a",
+					Usage:        "Amount of asset to be withdrawn (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.NonceFlag,
+					Shorthand:    "n",
+					Usage:        "Nonce for withdrawal",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	createWithdrawalToCounterPartyIdCmd.Flags().StringP(utils.CounterpartyIdFlag, "c", "", "ID of counterparty (Required)")
-	createWithdrawalToCounterPartyIdCmd.Flags().StringP(utils.AssetIdFlag, "i", "", "ID of asset to be withdrawn (Required)")
-	createWithdrawalToCounterPartyIdCmd.Flags().StringP(utils.AmountFlag, "a", "", "Amount of asset to be withdrawn (Required)")
-	createWithdrawalToCounterPartyIdCmd.Flags().StringP(utils.NonceFlag, "n", "", "Nonce for withdrawal")
-	createWithdrawalToCounterPartyIdCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	createWithdrawalToCounterPartyIdCmd.MarkFlagRequired(utils.CounterpartyIdFlag)
-	createWithdrawalToCounterPartyIdCmd.MarkFlagRequired(utils.AssetIdFlag)
-	createWithdrawalToCounterPartyIdCmd.MarkFlagRequired(utils.AmountFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

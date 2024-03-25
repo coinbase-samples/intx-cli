@@ -92,11 +92,11 @@ func MarshalJson(data interface{}, format bool) ([]byte, error) {
 }
 
 func CheckFormatFlag(cmd *cobra.Command) (bool, error) {
-	formatFlagValue, err := cmd.Flags().GetString(FormatFlag)
+	formatFlagValue, err := cmd.Flags().GetBool(FormatFlag)
 	if err != nil {
 		return false, fmt.Errorf("cannot read format flag: %w", err)
 	}
-	return formatFlagValue == "true", nil
+	return formatFlagValue, nil
 }
 
 func GetPortfolioId(cmd *cobra.Command, client *intx.Client) (string, error) {
@@ -173,4 +173,39 @@ func CreatePaginationParams(refDatetime string, resultLimit, resultOffset int) *
 		}
 	}
 	return nil
+}
+
+type CommandConfig struct {
+	Command    *cobra.Command
+	FlagConfig []FlagConfig
+}
+
+type FlagConfig struct {
+	FlagName     string
+	Shorthand    string
+	Usage        string
+	DefaultValue interface{}
+	Required     bool
+}
+
+func RegisterCommandConfigs(root *cobra.Command, cmdConfigs []CommandConfig) {
+	for _, config := range cmdConfigs {
+		for _, flag := range config.FlagConfig {
+			switch defaultValue := flag.DefaultValue.(type) {
+			case string:
+				config.Command.Flags().StringP(flag.FlagName, flag.Shorthand, defaultValue, flag.Usage)
+			case int:
+				config.Command.Flags().IntP(flag.FlagName, flag.Shorthand, defaultValue, flag.Usage)
+			case bool:
+				config.Command.Flags().BoolP(flag.FlagName, flag.Shorthand, defaultValue, flag.Usage)
+			}
+
+			if flag.Required {
+				if err := config.Command.MarkFlagRequired(flag.FlagName); err != nil {
+					fmt.Printf("could not mark flag %s as required: %v\n", flag.FlagName, err)
+				}
+			}
+			root.AddCommand(config.Command)
+		}
+	}
 }

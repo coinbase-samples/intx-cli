@@ -50,13 +50,34 @@ var updatePortfolioCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(updatePortfolioCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: updatePortfolioCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "i",
+					Usage:        "Portfolio ID. Uses environment variable if blank (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.NameFlag,
+					Shorthand:    "n",
+					Usage:        "New name of the portfolio (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	updatePortfolioCmd.Flags().StringP(utils.PortfolioIdFlag, "i", "", "Portfolio ID. Uses environment variable if blank (Required)")
-	updatePortfolioCmd.Flags().StringP(utils.NameFlag, "n", "", "New name of the portfolio (Required)")
-	updatePortfolioCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	updatePortfolioCmd.MarkFlagRequired(utils.PortfolioIdFlag)
-	updatePortfolioCmd.MarkFlagRequired(utils.NameFlag)
-
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

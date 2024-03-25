@@ -47,7 +47,20 @@ var listPortfoliosCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(listPortfoliosCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: listPortfoliosCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	listPortfoliosCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

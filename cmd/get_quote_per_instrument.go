@@ -49,8 +49,27 @@ var getQuotePerInstrumentCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getQuotePerInstrumentCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getQuotePerInstrumentCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.InstrumentIdFlag,
+					Shorthand:    "i",
+					Usage:        "ID of the Instrument, e.g. ETH-USDC (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getQuotePerInstrumentCmd.Flags().StringP(utils.InstrumentIdFlag, "i", "", "ID of the Instrument, e.g. ETH-USDC (Required)")
-	getQuotePerInstrumentCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }

@@ -50,10 +50,27 @@ var getOrderDetailsCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(getOrderDetailsCmd)
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: getOrderDetailsCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.OrderIdFlag,
+					Shorthand:    "i",
+					Usage:        "Order ID (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
 
-	getOrderDetailsCmd.Flags().StringP(utils.OrderIdFlag, "i", "", "Order ID (Required)")
-	getOrderDetailsCmd.Flags().StringP(utils.FormatFlag, "z", "false", "Pass true for formatted JSON. Default is false")
-
-	getOrderDetailsCmd.MarkFlagRequired(utils.OrderIdFlag)
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
 }
