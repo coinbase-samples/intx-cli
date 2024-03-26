@@ -24,7 +24,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "intx-cli",
+	Use:   "intxctl",
 	Short: "Root of INTX cli",
 }
 
