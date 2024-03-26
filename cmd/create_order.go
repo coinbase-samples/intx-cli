@@ -1,0 +1,177 @@
+/**
+ * Copyright 2024-present Coinbase Global, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package cmd
+
+import (
+	"fmt"
+	"github.com/coinbase-samples/intx-cli/utils"
+	"github.com/coinbase-samples/intx-sdk-go"
+	"github.com/google/uuid"
+	"github.com/spf13/cobra"
+)
+
+var createOrderCmd = &cobra.Command{
+	Use:   "create-order",
+	Short: "Create an order.",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		client, portfolioId, err := utils.InitClientAndPortfolioId(cmd, true)
+		if err != nil {
+			return fmt.Errorf("cannot initialize from environment: %w", err)
+		}
+
+		clientOrderId := utils.GetFlagStringValue(cmd, utils.ClientOrderIdFlag)
+		if clientOrderId == "" {
+			clientOrderId = uuid.New().String()
+		}
+
+		ctx, cancel := utils.GetContextWithTimeout()
+		defer cancel()
+
+		request := &intx.CreateOrderRequest{
+			ClientOrderId: clientOrderId,
+			PortfolioId:   portfolioId,
+			InstrumentId:  utils.GetFlagStringValue(cmd, utils.InstrumentIdFlag),
+			Side:          utils.GetFlagStringValue(cmd, utils.SideFlag),
+			Size:          utils.GetFlagStringValue(cmd, utils.SizeFlag),
+			Tif:           utils.GetFlagStringValue(cmd, utils.TifFlag),
+			Type:          utils.GetFlagStringValue(cmd, utils.TypeFlag),
+			Price:         utils.GetFlagStringValue(cmd, utils.LimitPriceFlag),
+			StopPrice:     utils.StringPtr(utils.GetFlagStringValue(cmd, utils.StopPriceFlag)),
+			ExpireTime:    utils.StringPtr(utils.GetFlagStringValue(cmd, utils.ExpiryTimeFlag)),
+			UserId:        utils.StringPtr(utils.GetFlagStringValue(cmd, utils.UserIdFlag)),
+			StpMode:       utils.StringPtr(utils.GetFlagStringValue(cmd, utils.StpModeFlag)),
+			PostOnly:      utils.GetFlagBoolValue(cmd, utils.PostOnlyFlag),
+		}
+
+		response, err := client.CreateOrder(ctx, request)
+		if err != nil {
+			return fmt.Errorf("cannot create order: %w", err)
+		}
+
+		return utils.PrintJsonResponse(cmd, response)
+	},
+}
+
+func init() {
+	cmdConfigs := []utils.CommandConfig{
+		{
+			Command: createOrderCmd,
+			FlagConfig: []utils.FlagConfig{
+				{
+					FlagName:     utils.InstrumentIdFlag,
+					Shorthand:    "i",
+					Usage:        "ID of the Instrument, e.g. ETH-USDC (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.SideFlag,
+					Shorthand:    "s",
+					Usage:        "Order side, e.g. BUY (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.SizeFlag,
+					Shorthand:    "b",
+					Usage:        "Order size in base asset units (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.TifFlag,
+					Shorthand:    "f",
+					Usage:        "Determine order fill strategy",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.TypeFlag,
+					Shorthand:    "t",
+					Usage:        "Type of the order, e.g. MARKET (Required)",
+					DefaultValue: "",
+					Required:     true,
+				},
+				{
+					FlagName:     utils.LimitPriceFlag,
+					Shorthand:    "l",
+					Usage:        "Limit price for the order",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.StopPriceFlag,
+					Shorthand:    "p",
+					Usage:        "Stop price for the order",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ExpiryTimeFlag,
+					Shorthand:    "e",
+					Usage:        "The expiry time of the order in UTC (TWAP and limit GTD only)",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.UserIdFlag,
+					Shorthand:    "u",
+					Usage:        "User ID for order",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.StpModeFlag,
+					Shorthand:    "x",
+					Usage:        "STP mode for order",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.PostOnlyFlag,
+					Shorthand:    "o",
+					Usage:        "Post only mode bool for order",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.PortfolioIdFlag,
+					Shorthand:    "r",
+					Usage:        "Portfolio ID. Uses environment variable if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.ClientOrderIdFlag,
+					Shorthand:    "c",
+					Usage:        "Client order id value. Autogenerated if blank",
+					DefaultValue: "",
+					Required:     false,
+				},
+				{
+					FlagName:     utils.FormatFlag,
+					Shorthand:    "z",
+					Usage:        "Pass true for formatted JSON. Default is false",
+					DefaultValue: false,
+					Required:     false,
+				},
+			},
+		},
+	}
+
+	utils.RegisterCommandConfigs(rootCmd, cmdConfigs)
+}
